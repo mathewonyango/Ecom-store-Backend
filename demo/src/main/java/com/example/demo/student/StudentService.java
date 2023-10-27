@@ -1,23 +1,23 @@
 package com.example.demo.student;
 
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
+
 @Service
 public class StudentService {
-    public List<Student> getStudents() {
-        return List.of(
-                new Student(
-                        1L,
-                        "Mathews Onyango",
-                        "Mathewsagumbah@gmail.com",
 
-                        LocalDate.of(1994, 8, 3),
-                        29
-                )
-        );
+    @Autowired
+    private StudentRepository studentRepository;
+
+    public List<Student> getStudents() {
+        return studentRepository.findAll();
+    }
+
+    public Student createStudent(Student student) {
+        // Save the student to the database using the repository
+        return studentRepository.save(student);
     }
 
 }

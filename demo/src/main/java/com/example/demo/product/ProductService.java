@@ -1,44 +1,40 @@
 package com.example.demo.product;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProductService {
-
-    private final List<Product> products = new ArrayList<>();
-    private long nextId = 1;
+    @Autowired
+    private ProductRepository productRepository;
 
     public List<Product> getAllProducts() {
-        return products;
+        return productRepository.findAll();
     }
 
     public Optional<Product> getProductById(Long id) {
-        return products.stream().filter(product -> product.getId().equals(id)).findFirst();
+        return productRepository.findById(id);
     }
 
     public Product createProduct(Product product) {
-        product.setId(nextId++);
-        products.add(product);
-        return product;
+        return productRepository.save(product);
     }
 
     public Product updateProduct(Long id, Product updatedProduct) {
-        Optional<Product> existingProduct = getProductById(id);
+        Optional<Product> existingProduct = productRepository.findById(id);
 
         if (existingProduct.isPresent()) {
             updatedProduct.setId(existingProduct.get().getId());
-            int index = products.indexOf(existingProduct.get());
-            products.set(index, updatedProduct);
-            return updatedProduct;
+            return productRepository.save(updatedProduct);
         }
+
         return null; // Return null if the product to update is not found.
     }
 
     public void deleteProduct(Long id) {
-        products.removeIf(product -> product.getId().equals(id));
+        productRepository.deleteById(id);
     }
 }
