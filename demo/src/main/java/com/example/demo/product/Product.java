@@ -54,5 +54,21 @@ public class Product {
                 ", imageBase64='" + imageBase64 + '\'' +
                 '}';
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public String getImageBase64() {
+        return imageBase64;
+    }
 // Constructors, getters, and setters...
 }
