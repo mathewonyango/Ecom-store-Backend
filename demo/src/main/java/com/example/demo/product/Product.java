@@ -1,32 +1,26 @@
 package com.example.demo.product;
 
+import com.example.demo.Cart.Cart;
+import com.example.demo.ProductCategories.Category;
+import com.example.demo.ProductCategories.CategoryRepository;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 
 @Getter
+@Setter
+@NoArgsConstructor // Adding Lombok's NoArgsConstructor
 @Entity
-@Table
+@Table // Specify the table name
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Transient // Marking transient to avoid serialization
+    private CategoryRepository categoryRepository;
 
-    private String name;
-    private double price;
-
-    @Lob
-    private String imageBase64; // Store the image in base64 format
-
-    public Product() {
-    }
-
-    public Product(String name,
-                   double price,
-                   String imageBase64) {
-        this.name = name;
-        this.price = price;
-        this.imageBase64 = imageBase64;
+    public void setCategoryRepository(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 
     public void setId(Long id) {
@@ -45,30 +39,40 @@ public class Product {
         this.imageBase64 = imageBase64;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", imageBase64='" + imageBase64 + '\'' +
-                '}';
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
-    public Long getId() {
-        return id;
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
-    public String getName() {
-        return name;
+    public Product(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 
-    public double getPrice() {
-        return price;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private double price;
+
+    @Lob
+    private String imageBase64;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
+    @ManyToOne
+    @JoinColumn(name = "cart_id",referencedColumnName = "id")
+    private Cart cart;
+
+    public void setCategoryId(Long categoryId) {
+        if (categoryId != null && categoryRepository != null) {
+            this.category = categoryRepository.findById(categoryId).orElse(null);
+        }
     }
 
-    public String getImageBase64() {
-        return imageBase64;
-    }
-// Constructors, getters, and setters...
+    // Constructors, getters, and setters...
 }

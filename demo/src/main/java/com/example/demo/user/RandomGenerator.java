@@ -16,13 +16,13 @@ public class RandomGenerator {
     }
 
     // Method to generate a random number
-    private static int generateRandomNumber() {
+    public static int generateRandomNumber() {
         Random random = new Random();
         return random.nextInt(1000); // Adjust the range as needed
     }
 
     // Method to generate a random string (UUID)
-    private static String generateRandomString() {
+    public static String generateRandomString() {
         return UUID.randomUUID().toString();
     }
 }

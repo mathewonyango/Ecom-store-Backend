@@ -1,17 +1,18 @@
 package com.example.demo.user;
 
-import com.example.demo.PasswordHasher;
-import com.example.demo.user.AuthResponse;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.Random;
+import com.example.demo.PasswordHasher;
 
 @RestController
 @RequestMapping("/api/users")
@@ -32,9 +33,10 @@ public class UserController<UsernameNotFoundException extends Throwable> {
 
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.registerUser(user);
+    public User registerUser(@RequestBody UserRequest UserRequest) {
+        return userService.registerUser(UserRequest);
     }
+
 
     @PostMapping("/authenticate")
     public ResponseEntity<Object> authenticateUser(@RequestBody User authenticationRequest) {
@@ -67,7 +69,7 @@ public class UserController<UsernameNotFoundException extends Throwable> {
     @PostMapping("/password-reset/{Email}/{NewPassword}")
     public ResponseEntity<?> requestPasswordReset(@PathVariable String Email, @PathVariable String NewPassword){
 
-    // Verify user existence, generate token, send Email, persist request
+        // Verify user existence, generate token, send Email, persist request
         Optional<User> userExists = userService.FindUserByEmail(Email);
 
         if (userExists.isEmpty()) {

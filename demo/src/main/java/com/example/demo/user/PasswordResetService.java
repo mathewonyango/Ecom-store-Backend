@@ -1,11 +1,11 @@
 package com.example.demo.user;
-
-import com.example.demo.MailSenderService;
-import org.springframework.stereotype.Service;
-
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.example.demo.MailSenderService;
 
 @Service
 public class PasswordResetService {
@@ -35,7 +35,10 @@ public class PasswordResetService {
     }
 
     public void savePasswordReset(String email, String name) {
-        String resetToken=generateResetToken();
+
+        RandomGenerator randomGenerator= new RandomGenerator();
+        String resetToken=randomGenerator.generateRandomString();
+        // String resetToken=generateResetToken();
         String emailBody = "Dear"+ " "+name +"," + "\n\n"
                 + "You have requested to reset your password. Please use the following token to complete the process:\n\n"
                 + "Reset Token: " + resetToken + "\n\n"
